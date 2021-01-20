@@ -1,24 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { JWKInterface } from 'arweave/node/lib/wallet'
+
+// Hooks
+import useArweave from './hooks/useArweave'
+import useContract from './hooks/useContract'
 
 function App() {
+	const [wallet, setWallet] = React.useState<JWKInterface | null>(null)
+
+  // Hooks
+  const arweave = useArweave()
+  const { getContractState } = useContract()
+
+  const onGetContractState = async () => {
+    const contractState = await getContractState()
+    console.log(contractState)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1 style={{ textAlign: 'center' }}>Hooks Testing</h1>
+      <div style={{ width: '50%', display: 'flex', justifyContent: 'space-between', margin: '0 auto' }}>
+        <button onClick={onGetContractState}>Get Contract State</button>
+      </div>
     </div>
   );
 }

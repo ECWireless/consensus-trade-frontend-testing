@@ -2,18 +2,22 @@ import React from 'react'
 import { JWKInterface } from 'arweave/node/lib/wallet'
 
 // Hooks
-import useArweave from './hooks/useArweave'
 import useContract from './hooks/useContract'
 
-// Consts
-const JOSEPH_WALLET_ADDRESS = 'O6SGGaUbSm72rQO-9A7SGFUIGOiSy8Uih1-zbQmufaU'
-const AMOUNT_TO_SEND = 100
+// Addresses
+// const JOSEPH_WALLET_ADDRESS = 'O6SGGaUbSm72rQO-9A7SGFUIGOiSy8Uih1-zbQmufaU'
 
 function App() {
-  const [loginError, setLoginError] = React.useState<boolean>(false)
-  const [stateRead, setStateRead] = React.useState<boolean>(false)
-  const [transferTxId, setTransferTxId] = React.useState<string | false>('')
   const [wallet, setWallet] = React.useState<JWKInterface | null>(null)
+  const [loginError, setLoginError] = React.useState<boolean>(false)
+
+  // Reading state
+  const [stateRead, setStateRead] = React.useState<boolean>(false)
+
+  // Transferring
+  const [transferTarget, setTransferTarget] = React.useState<string>('')
+  const [transferQty, setTransferQty] = React.useState<number>(0)
+  const [transferTxId, setTransferTxId] = React.useState<string | false>('')
 
   // Hooks
   const { getContractState, onTransfer } = useContract(wallet! as JWKInterface)
@@ -43,9 +47,13 @@ function App() {
   }
 
   const onTransferToken = async () => {
-    const trasactionId = await onTransfer(JOSEPH_WALLET_ADDRESS, AMOUNT_TO_SEND)
-    setTransferTxId(trasactionId)
-    console.log(trasactionId)
+    if (transferTarget !== '' && transferQty > 0) {
+      const trasactionId = await onTransfer(transferTarget, transferQty)
+      setTransferTxId(trasactionId)
+      console.log(trasactionId)
+    } else {
+      setTransferTxId('Invalid Inputs')
+    }
   }
 
   return (
@@ -61,8 +69,19 @@ function App() {
         <br />
         {stateRead && <p>State was logged to the console.</p>}
         <br />
+        <h2>Transfer:</h2>
+        <br />
+        <label>To address:</label>
+        <br />
+        <input type="text" value={transferTarget} onChange={(e) => setTransferTarget(e.target.value)}/>
+        <br />
+        <label>Amount to send:</label>
+        <br />
+        <input type="number" value={transferQty} onChange={(e) => setTransferQty(Number(e.target.value))}/>
+        <br />
+        <br />
         <button onClick={onTransferToken}>Transfer</button>
-        {transferTxId && <p>{transferTxId}</p>}
+        {transferTxId && <p>Tx ID: {transferTxId}</p>}
       </div>)}
     </div>
   );

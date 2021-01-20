@@ -19,8 +19,13 @@ function App() {
   const [transferQty, setTransferQty] = React.useState<number>(0)
   const [transferTxId, setTransferTxId] = React.useState<string | false>('')
 
+  // Locking
+  const [lockQty, setLockQty] = React.useState<number>(0)
+  const [lockLength, setLockLength] = React.useState<number>(750)
+  const [lockTxId, setLockTxId] = React.useState<string | false>('')
+
   // Hooks
-  const { getContractState, onTransfer } = useContract(wallet! as JWKInterface)
+  const { getContractState, onTransfer, onLock } = useContract(wallet! as JWKInterface)
 
   // Upload wallet
 	const uploadWallet = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,6 +61,16 @@ function App() {
     }
   }
 
+  const onLockTokens = async () => {
+    if (lockQty > 0) {
+      const trasactionId = await onLock(lockQty, lockLength)
+      setLockTxId(trasactionId)
+      console.log(trasactionId)
+    } else {
+      setLockTxId('Invalid Inputs')
+    }
+  }
+
   return (
     <div>
       <h1 style={{ textAlign: 'center' }}>Hooks Testing</h1>
@@ -69,6 +84,7 @@ function App() {
         <br />
         {stateRead && <p>State was logged to the console.</p>}
         <br />
+
         <h2>Transfer:</h2>
         <br />
         <label>To address:</label>
@@ -80,8 +96,22 @@ function App() {
         <input type="number" value={transferQty} onChange={(e) => setTransferQty(Number(e.target.value))}/>
         <br />
         <br />
-        <button onClick={onTransferToken}>Transfer</button>
+        <button onClick={onTransferToken}>Transfer Tokens</button>
         {transferTxId && <p>Tx ID: {transferTxId}</p>}
+
+        <h2>Lock:</h2>
+        <br />
+        <label>Amount to lock:</label>
+        <br />
+        <input type="number" value={lockQty} onChange={(e) => setLockQty(Number(e.target.value))}/>
+        <br />
+        <label>Lock length:</label>
+        <br />
+        <input type="number" value={lockLength} onChange={(e) => setLockLength(Number(e.target.value))}/>
+        <br />
+        <br />
+        <button onClick={onLockTokens}>Lock Tokens</button>
+        {lockTxId && <p>Tx ID: {lockTxId}</p>}
       </div>)}
     </div>
   );

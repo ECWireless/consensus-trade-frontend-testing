@@ -1,5 +1,5 @@
 # Frontend Testing for ConsensusTrade
-Latest contract deployed at: `EizpnspCV3x4Gc8H11X5JzKF9NRUzCeDC-jhU6gC9es`
+Latest contract deployed at: `EizpnspCV3x4Gc8H11X5JzKF9NRUzCeDC-jhU6gC9es`\
 Contract repo: https://github.com/jschiarizzi/consensus-trade-contract
 
 # Getting Started with Create React App

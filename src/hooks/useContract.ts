@@ -4,8 +4,7 @@ import { readContract } from 'smartweave'
 // import { ContractInterface, ContractList } from './interfaces'
 import useArweave from './useArweave'
 
-const CONTRACT_ADDRESS = 'EizpnspCV3x4Gc8H11X5JzKF9NRUzCeDC-jhU6gC9es'
-const TEST_CONTRACT_ADDRESS = 'YggvBIHYIihBoWsWJg4wBeTDQUBR7KVZG62o2DFYWr0'
+const CONTRACT_ADDRESS = 'qoUAMfYEBVOLQoQgqvbTyv302UVaFfl58jZow46sHhc'
 
 export default function useContracts() {
     const arweave = useArweave()
@@ -24,7 +23,7 @@ export default function useContracts() {
     // }
 
     const getContractState = async (): Promise<any> => {
-        const contractState = await readContract(arweave, CONTRACT_ADDRESS, 609515)
+        const contractState = await readContract(arweave, CONTRACT_ADDRESS)
         return contractState
     }
 

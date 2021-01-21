@@ -24,8 +24,12 @@ function App() {
   const [lockLength, setLockLength] = React.useState<number>(750)
   const [lockTxId, setLockTxId] = React.useState<string | false>('')
 
+  // Proposing
+  const [proposeNote, setProposeNote] = React.useState<string>('')
+  const [proposeTxId, setProposeTxId] = React.useState<string | false>('')
+
   // Hooks
-  const { getContractState, onTransfer, onLock } = useContract(wallet! as JWKInterface)
+  const { getContractState, onTransfer, onLock, onPropose } = useContract(wallet! as JWKInterface)
 
   // Upload wallet
 	const uploadWallet = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,6 +75,16 @@ function App() {
     }
   }
 
+  const onProposeNote = async () => {
+    if (proposeNote !== '') {
+      const trasactionId = await onPropose('indicative', proposeNote)
+      setProposeTxId(trasactionId)
+      console.log(trasactionId)
+    } else {
+      setProposeTxId('Invalid Inputs')
+    }
+  }
+
   return (
     <div>
       <h1 style={{ textAlign: 'center' }}>Hooks Testing</h1>
@@ -86,7 +100,6 @@ function App() {
         <br />
 
         <h2>Transfer:</h2>
-        <br />
         <label>To address:</label>
         <br />
         <input type="text" value={transferTarget} onChange={(e) => setTransferTarget(e.target.value)}/>
@@ -100,7 +113,6 @@ function App() {
         {transferTxId && <p>Tx ID: {transferTxId}</p>}
 
         <h2>Lock:</h2>
-        <br />
         <label>Amount to lock:</label>
         <br />
         <input type="number" value={lockQty} onChange={(e) => setLockQty(Number(e.target.value))}/>
@@ -112,6 +124,15 @@ function App() {
         <br />
         <button onClick={onLockTokens}>Lock Tokens</button>
         {lockTxId && <p>Tx ID: {lockTxId}</p>}
+
+        <h2>Propose Something:</h2>
+        <label>Proposal:</label>
+        <br />
+        <input type="string" value={proposeNote} onChange={(e) => setProposeNote(e.target.value)}/>
+        <br />
+        <br />
+        <button onClick={onProposeNote}>Propose</button>
+        {proposeTxId && <p>Tx ID: {proposeTxId}</p>}
       </div>)}
     </div>
   );

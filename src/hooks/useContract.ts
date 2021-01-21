@@ -32,5 +32,14 @@ export default function useContracts(wallet: JWKInterface) {
         return txId
     }
 
-    return { getContractState, onTransfer, onLock }
+    const onPropose = async (type: string, note: string): Promise<string | false> => {
+        const txId = await interactWrite(arweave, wallet, CONTRACT_ADDRESS, {
+            function: 'propose',
+            type,
+            note,
+        })
+        return txId
+    }
+
+    return { getContractState, onTransfer, onLock, onPropose }
 }

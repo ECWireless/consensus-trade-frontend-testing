@@ -1,5 +1,4 @@
-import Arweave from "arweave"
-
+import Arweave from 'arweave'
 export default function useArweave() {
     const arweave = Arweave.init({
         host: 'arweave.net',// Hostname or IP address for a Arweave host

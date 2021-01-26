@@ -48,6 +48,7 @@ function App() {
     onTransfer,
     onLock,
     onPropose,
+    onCreateMarket,
     onVote
   } = useContract(wallet! as JWKInterface)
 
@@ -89,14 +90,17 @@ function App() {
     }
   }
 
-  const onProposeNote = async () => {
-    if (proposeNote !== '') {
-      const trasactionId = await onPropose('indicative', proposeNote)
-      setProposeTxId(trasactionId)
-      console.log(trasactionId)
-    } else {
-      setProposeTxId('Invalid Inputs')
-    }
+  const onNewMarket = async () => {
+    const note = 'this is my note'
+    const tweet = 'This is my 2nd Tweet!';
+    const tweetByUsername = '@ECWireless';
+    const tweetByPhoto = 'https://twitter.com/BiIIMurray/photo';
+    const tweetCreated = 'Sun Jan 24 2021 21:28:51 GMT-0700 (Mountain Standard Time)';
+    const tweetLink = 'https://twitter.com/BiIIMurray/status/437367711723978752';
+
+    const trasactionId = await onCreateMarket('createMarket', note, tweet, tweetByUsername, tweetByPhoto, tweetCreated, tweetLink)
+    setProposeTxId(trasactionId)
+    console.log(trasactionId)
   }
 
   const onCastVote = async (id: number, cast: string) => {
@@ -152,7 +156,7 @@ function App() {
               <input type="string" value={proposeNote} onChange={(e) => setProposeNote(e.target.value)}/>
               <br />
               <br />
-              <button onClick={onProposeNote}>Propose</button>
+              <button onClick={onNewMarket}>Propose</button>
               {proposeTxId && <p>Tx ID: {proposeTxId}</p>}
               <br />
 

@@ -4,7 +4,7 @@ import { JWKInterface } from 'arweave/node/lib/wallet'
 // import { ContractInterface, ContractList } from './interfaces'
 import useArweave from './useArweave'
 
-const CONTRACT_ADDRESS = 'bJjnJkQshDBnlfm4ijVc2N2PJIV9bdPl-lYXG4UaShI'
+const CONTRACT_ADDRESS = '95FET2dickp8y1a6E2uRqrCQXs3N8jgeN2Y9aAUyOWI'
 
 export default function useContracts(wallet: JWKInterface) {
     const arweave = useArweave()
@@ -32,21 +32,11 @@ export default function useContracts(wallet: JWKInterface) {
         return txId
     }
 
-    const onPropose = async (type: string, note: string): Promise<string | false> => {
-        const txId = await interactWrite(arweave, wallet, CONTRACT_ADDRESS, {
-            function: 'propose',
-            type,
-            note,
-        })
-        return txId
-    }
-
     const onCreateMarket = async (
         type: string,
         note: string,
-        tweet: string,
-        tweetByUsername: string,
-        tweetByPhoto: string,
+        tweetUsername: string,
+        tweetPhoto: string,
         tweetCreated: string,
         tweetLink: string,
     ): Promise<string | false> => {
@@ -55,9 +45,8 @@ export default function useContracts(wallet: JWKInterface) {
             function: 'propose',
             type,
             note,
-            tweet,
-            tweetByUsername,
-            tweetByPhoto,
+            tweetUsername,
+            tweetPhoto,
             tweetCreated,
             tweetLink,
         })
@@ -73,5 +62,5 @@ export default function useContracts(wallet: JWKInterface) {
         return txId
     }
 
-    return { getContractState, onTransfer, onLock, onPropose, onCreateMarket, onVote }
+    return { getContractState, onTransfer, onLock, onCreateMarket, onVote }
 }

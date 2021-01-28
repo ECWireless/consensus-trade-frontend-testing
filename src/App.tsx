@@ -32,12 +32,16 @@ function App() {
 
   // Locking
   const [lockQty, setLockQty] = React.useState<number>(0)
-  const [lockLength, setLockLength] = React.useState<number>(750)
+  const [lockLength, setLockLength] = React.useState<number>(2160)
   const [lockTxId, setLockTxId] = React.useState<string | false>('')
 
-  // Proposing
-  const [proposeNote, setProposeNote] = React.useState<string>('')
-  const [proposeTxId, setProposeTxId] = React.useState<string | false>('')
+  // Creating Market
+  const [marketNote, setMarketNote] = React.useState<string>('')
+  const [marketTweetUsername, setMarketTweetUsername] = React.useState<string>('')
+  const [marketTweetPhoto, setMarketTweetPhoto] = React.useState<string>('')
+  const [marketTweetCreated, setMarketTweetCreated] = React.useState<string>('')
+  const [marketTweetLink, setMarketTweetLink] = React.useState<string>('')
+  const [marketTxd, setMarketTxd] = React.useState<string | false>('')
 
   // Voting
   const [voteTxId, setVoteTxId] = React.useState<string | false>('')
@@ -47,7 +51,6 @@ function App() {
     getContractState,
     onTransfer,
     onLock,
-    onPropose,
     onCreateMarket,
     onVote
   } = useContract(wallet! as JWKInterface)
@@ -91,15 +94,21 @@ function App() {
   }
 
   const onNewMarket = async () => {
-    const note = 'this is my note'
-    const tweet = 'This is my 2nd Tweet!';
-    const tweetByUsername = '@ECWireless';
-    const tweetByPhoto = 'https://twitter.com/BiIIMurray/photo';
-    const tweetCreated = 'Sun Jan 24 2021 21:28:51 GMT-0700 (Mountain Standard Time)';
-    const tweetLink = 'https://twitter.com/BiIIMurray/status/437367711723978752';
+    // const note = 'This is my 1st Tweet!';
+    // const tweetUsername = '@ECWireless';
+    // const tweetPhoto = 'https://twitter.com/BiIIMurray/photo';
+    // const tweetCreated = 'Sun Jan 24 2021 21:28:51 GMT-0700 (Mountain Standard Time)';
+    // const tweetLink = 'https://twitter.com/BiIIMurray/status/437367711723978752';
 
-    const trasactionId = await onCreateMarket('createMarket', note, tweet, tweetByUsername, tweetByPhoto, tweetCreated, tweetLink)
-    setProposeTxId(trasactionId)
+    const trasactionId = await onCreateMarket(
+      'createMarket',
+      marketNote,
+      marketTweetUsername,
+      marketTweetPhoto,
+      marketTweetCreated,
+      marketTweetLink
+    )
+    setMarketTxd(trasactionId)
     console.log(trasactionId)
   }
 
@@ -137,27 +146,43 @@ function App() {
               <button onClick={onTransferToken}>Transfer Tokens</button>
               {transferTxId && <p>Tx ID: {transferTxId}</p>}
 
-              <h2>Lock:</h2>
-              <label>Amount to lock:</label>
+              <h2>Stake:</h2>
+              <label>Amount to stake:</label>
               <br />
               <input type="number" value={lockQty} onChange={(e) => setLockQty(Number(e.target.value))}/>
-              <br />
-              <label>Lock length:</label>
-              <br />
-              <input type="number" value={lockLength} onChange={(e) => setLockLength(Number(e.target.value))}/>
               <br />
               <br />
               <button onClick={onLockTokens}>Lock Tokens</button>
               {lockTxId && <p>Tx ID: {lockTxId}</p>}
 
-              <h2>Propose Something:</h2>
-              <label>Proposal:</label>
+              <h2>Create Market:</h2>
+              <label>Tweet:</label>
               <br />
-              <input type="string" value={proposeNote} onChange={(e) => setProposeNote(e.target.value)}/>
+              <input type="string" value={marketNote} onChange={(e) => setMarketNote(e.target.value)}/>
+              <br />
+              <br />
+              <label>Tweet by:</label>
+              <br />
+              <input type="string" value={marketTweetUsername} onChange={(e) => setMarketTweetUsername(e.target.value)}/>
+              <br />
+              <br />
+              <label>User's Photo:</label>
+              <br />
+              <input type="string" value={marketTweetPhoto} onChange={(e) => setMarketTweetPhoto(e.target.value)}/>
+              <br />
+              <br />
+              <label>Tweet created timestamp:</label>
+              <br />
+              <input type="string" value={marketTweetCreated} onChange={(e) => setMarketTweetCreated(e.target.value)}/>
+              <br />
+              <br />
+              <label>Tweet link:</label>
+              <br />
+              <input type="string" value={marketTweetLink} onChange={(e) => setMarketTweetLink(e.target.value)}/>
               <br />
               <br />
               <button onClick={onNewMarket}>Propose</button>
-              {proposeTxId && <p>Tx ID: {proposeTxId}</p>}
+              {marketTxd && <p>Tx ID: {marketTxd}</p>}
               <br />
 
               <h2>Assertions:</h2>

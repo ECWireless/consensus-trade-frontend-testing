@@ -46,13 +46,17 @@ function App() {
   // Voting
   const [voteTxId, setVoteTxId] = React.useState<string | false>('')
 
+  // Staking
+  const [stakeTxId, setStakeTxId] = React.useState<string | false>('')
+
   // Hooks
   const {
     getContractState,
     onTransfer,
     onLock,
     onCreateMarket,
-    onVote
+    onVote,
+    onStake,
   } = useContract(wallet! as JWKInterface)
 
   // Upload wallet
@@ -101,7 +105,6 @@ function App() {
     // const tweetLink = 'https://twitter.com/BiIIMurray/status/437367711723978752';
 
     const trasactionId = await onCreateMarket(
-      'createMarket',
       marketNote,
       marketTweetUsername,
       marketTweetPhoto,
@@ -115,6 +118,12 @@ function App() {
   const onCastVote = async (id: number, cast: string) => {
     const trasactionId = await onVote(id, cast)
     setVoteTxId(trasactionId)
+    console.log(trasactionId)
+  }
+
+  const onMarketStake = async (id: number, cast: string, stakedAmount: number) => {
+    const trasactionId = await onStake(id, cast, stakedAmount)
+    setStakeTxId(trasactionId)
     console.log(trasactionId)
   }
 
@@ -185,20 +194,20 @@ function App() {
               {marketTxd && <p>Tx ID: {marketTxd}</p>}
               <br />
 
-              <h2>Assertions:</h2>
-              {contractState.votes.map((vote: any, index: number) => {
+              <h2>Tweets:</h2>
+              {contractState.markets.map((vote: any, index: number) => {
                 return (
                   <div key={index}>
-                    <p>{vote.note}</p>
+                    <p>{vote.tweet}</p>
                     <p>Yays: {vote.yays}</p>
                     <p>Nays: {vote.nays}</p>
-                    <button onClick={() => onCastVote(index, 'yay')}>Yes</button>
-                    <button onClick={() => onCastVote(index, 'nay')}>No</button>
+                    <button onClick={() => onMarketStake(index, 'yay', 4000)}>Yes</button>
+                    <button onClick={() => onMarketStake(index, 'nay', 4000)}>No</button>
                     <br />
                   </div>
                 )
               })}
-              {voteTxId && <p>Tx ID: {voteTxId}</p>}
+              {stakeTxId && <p>Tx ID: {stakeTxId}</p>}
               <br />
               <br />
             </div>)}

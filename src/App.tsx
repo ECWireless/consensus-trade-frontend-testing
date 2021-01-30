@@ -11,12 +11,28 @@ function App() {
   const [wallet, setWallet] = React.useState<JWKInterface | null>(null)
   const [loginError, setLoginError] = React.useState<boolean>(false)
   const [contractState, setContractState] = React.useState<any>(null)
+  const [markets, setMarkets] = React.useState<any>([])
   const [loadingState, setLoadingState] = React.useState<boolean>(false)
 
   React.useEffect(() => {
     setLoadingState(true)
     const onGetContractState = async () => {
       const newContractState = await getContractState()
+
+      const addIdsToArrary = (result: any): any[] => {
+        let newIdArray: any[] = []
+        let newArray: any[] = []
+        newIdArray = Object.keys(result)
+    
+        Object.keys(result).map(function(key, index) {
+            newArray.push(result[key])
+            newArray[index].id = newIdArray[index]
+            return newArray
+        })
+        return newArray
+      }
+      const marketsArrary = addIdsToArrary(newContractState.markets)
+      setMarkets(marketsArrary)
       setContractState(newContractState)
       setLoadingState(false)
       console.log(newContractState)
@@ -155,15 +171,6 @@ function App() {
               <button onClick={onTransferToken}>Transfer Tokens</button>
               {transferTxId && <p>Tx ID: {transferTxId}</p>}
 
-              <h2>Stake:</h2>
-              <label>Amount to stake:</label>
-              <br />
-              <input type="number" value={lockQty} onChange={(e) => setLockQty(Number(e.target.value))}/>
-              <br />
-              <br />
-              <button onClick={onLockTokens}>Lock Tokens</button>
-              {lockTxId && <p>Tx ID: {lockTxId}</p>}
-
               <h2>Create Market:</h2>
               <label>Tweet:</label>
               <br />
@@ -190,19 +197,19 @@ function App() {
               <input type="string" value={marketTweetLink} onChange={(e) => setMarketTweetLink(e.target.value)}/>
               <br />
               <br />
-              <button onClick={onNewMarket}>Propose</button>
+              <button onClick={onNewMarket}>Tweet</button>
               {marketTxd && <p>Tx ID: {marketTxd}</p>}
               <br />
 
               <h2>Tweets:</h2>
-              {contractState.markets.map((vote: any, index: number) => {
+              {markets.map((market: any, index: number) => {
                 return (
                   <div key={index}>
-                    <p>{vote.tweet}</p>
-                    <p>Yays: {vote.yays}</p>
-                    <p>Nays: {vote.nays}</p>
-                    <button onClick={() => onMarketStake(index, 'yay', 4000)}>Yes</button>
-                    <button onClick={() => onMarketStake(index, 'nay', 4000)}>No</button>
+                    <p>{market.tweet}</p>
+                    <p>Yays: {market.yays}</p>
+                    <p>Nays: {market.nays}</p>
+                    <button onClick={() => onMarketStake(market.marketId, 'yay', 4000)}>Yes</button>
+                    <button onClick={() => onMarketStake(market.marketId, 'nay', 4000)}>No</button>
                     <br />
                   </div>
                 )

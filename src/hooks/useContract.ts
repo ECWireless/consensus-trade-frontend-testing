@@ -4,7 +4,7 @@ import { JWKInterface } from 'arweave/node/lib/wallet'
 // import { ContractInterface, ContractList } from './interfaces'
 import useArweave from './useArweave'
 
-const CONTRACT_ADDRESS = 'iEPkBNzZTNXSsEJUKL-RH5N1IkEf83EGWG2-L3kSa3s'
+const CONTRACT_ADDRESS = 'HJfFTVxB0kSkr2Q5soVYtoMN4nZd-WZHs1Kv0g2lHuY'
 
 export default function useContracts(wallet: JWKInterface) {
     const arweave = useArweave()

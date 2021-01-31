@@ -59,7 +59,7 @@ export default function useContracts(wallet: JWKInterface) {
         return txId
     }
 
-    const onStake = async (id: number, cast: string, stakedAmount: number): Promise<string | false> => {
+    const onStake = async (id: string, cast: string, stakedAmount: number): Promise<string | false> => {
         const txId = await interactWrite(arweave, wallet, CONTRACT_ADDRESS, {
             function: 'stake',
             id,
@@ -69,5 +69,13 @@ export default function useContracts(wallet: JWKInterface) {
         return txId
     }
 
-    return { getContractState, onTransfer, onLock, onCreateMarket, onVote, onStake }
+    const onDisburse = async (id: string): Promise<string | false> => {
+        const txId = await interactWrite(arweave, wallet, CONTRACT_ADDRESS, {
+            function: 'disburse',
+            id,
+        })
+        return txId
+    }
+
+    return { getContractState, onTransfer, onLock, onCreateMarket, onVote, onStake, onDisburse }
 }

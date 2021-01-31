@@ -10,7 +10,6 @@ import useContract from './hooks/useContract'
 function App() {
   const [wallet, setWallet] = React.useState<JWKInterface | null>(null)
   const [loginError, setLoginError] = React.useState<boolean>(false)
-  const [contractState, setContractState] = React.useState<any>(null)
   const [markets, setMarkets] = React.useState<any>([])
   const [loadingState, setLoadingState] = React.useState<boolean>(false)
 
@@ -33,7 +32,6 @@ function App() {
       }
       const marketsArrary = addIdsToArrary(newContractState.markets)
       setMarkets(marketsArrary)
-      setContractState(newContractState)
       setLoadingState(false)
       console.log(newContractState)
     }
@@ -46,11 +44,6 @@ function App() {
   const [transferQty, setTransferQty] = React.useState<number>(0)
   const [transferTxId, setTransferTxId] = React.useState<string | false>('')
 
-  // Locking
-  const [lockQty, setLockQty] = React.useState<number>(0)
-  const [lockLength, setLockLength] = React.useState<number>(2160)
-  const [lockTxId, setLockTxId] = React.useState<string | false>('')
-
   // Creating Market
   const [marketNote, setMarketNote] = React.useState<string>('')
   const [marketTweetUsername, setMarketTweetUsername] = React.useState<string>('')
@@ -59,20 +52,19 @@ function App() {
   const [marketTweetLink, setMarketTweetLink] = React.useState<string>('')
   const [marketTxd, setMarketTxd] = React.useState<string | false>('')
 
-  // Voting
-  const [voteTxId, setVoteTxId] = React.useState<string | false>('')
-
   // Staking
   const [stakeTxId, setStakeTxId] = React.useState<string | false>('')
+
+  // Disbursing
+  const [disburseTxId, setDisburseTxId] = React.useState<string | false>('')
 
   // Hooks
   const {
     getContractState,
     onTransfer,
-    onLock,
     onCreateMarket,
-    onVote,
     onStake,
+    onDisburse,
   } = useContract(wallet! as JWKInterface)
 
   // Upload wallet
@@ -103,16 +95,6 @@ function App() {
     }
   }
 
-  const onLockTokens = async () => {
-    if (lockQty > 0) {
-      const trasactionId = await onLock(lockQty, lockLength)
-      setLockTxId(trasactionId)
-      console.log(trasactionId)
-    } else {
-      setLockTxId('Invalid Inputs')
-    }
-  }
-
   const onNewMarket = async () => {
     // const note = 'This is my 1st Tweet!';
     // const tweetUsername = '@ECWireless';
@@ -131,15 +113,15 @@ function App() {
     console.log(trasactionId)
   }
 
-  const onCastVote = async (id: number, cast: string) => {
-    const trasactionId = await onVote(id, cast)
-    setVoteTxId(trasactionId)
+  const onMarketStake = async (id: string, cast: string, stakedAmount: number) => {
+    const trasactionId = await onStake(id, cast, stakedAmount)
+    setStakeTxId(trasactionId)
     console.log(trasactionId)
   }
 
-  const onMarketStake = async (id: number, cast: string, stakedAmount: number) => {
-    const trasactionId = await onStake(id, cast, stakedAmount)
-    setStakeTxId(trasactionId)
+  const onConcludeMarket = async (id: string) => {
+    const trasactionId = await onDisburse(id)
+    setDisburseTxId(trasactionId)
     console.log(trasactionId)
   }
 
@@ -208,13 +190,15 @@ function App() {
                     <p>{market.tweet}</p>
                     <p>Yays: {market.yays}</p>
                     <p>Nays: {market.nays}</p>
-                    <button onClick={() => onMarketStake(market.marketId, 'yay', 4000)}>Yes</button>
-                    <button onClick={() => onMarketStake(market.marketId, 'nay', 4000)}>No</button>
+                    <button onClick={() => onMarketStake(market.marketId, 'yay', 5000)}>Yes</button>
+                    <button onClick={() => onMarketStake(market.marketId, 'nay', 3000)}>No</button>
+                    <button onClick={() => onConcludeMarket(market.marketId)}>Conclude Market</button>
                     <br />
                   </div>
                 )
               })}
               {stakeTxId && <p>Tx ID: {stakeTxId}</p>}
+              {disburseTxId && <p>Tx ID: {disburseTxId}</p>}
               <br />
               <br />
             </div>)}
